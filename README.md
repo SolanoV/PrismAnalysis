@@ -46,4 +46,17 @@ boolean isActive = true;
 // 3. Logic & Assignment
 count = 50;
 ```
+---
+## Architecture
+The project follows the **MVC (Model-View-Controller)** pattern:
+-**Controller** (com.prismx.controller): Orchestrates the UI flow and analysis sequence.
+-**Model** (com.prismx.model): Contains the core compiler logic (Lexer, Parser, Semantic Analyzer).
+-**View** (com.prismx.view): FXML layouts and CSS stylesheets.
+
+--- 
+## Setup & Practice
+1. Clone the repository.
+2. Open in your favourite Java IDE(e.g. VSCode, IntelliJ).
+3. Add JavaFX SDK to your project libraries.
+4. Run prismView.java.
 
