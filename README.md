@@ -9,7 +9,7 @@ Prism visualizes the **Lexical**, **Syntax**, and **Semantic** analysis phases o
 
 ---
 
-## Key Features
+## :bulb: Key Features
 
 ### Interactive UI
 * **Visual Pipeline:** Real-time "Traffic Light" status indicators for every analysis phase.
@@ -26,7 +26,7 @@ Prism visualizes the **Lexical**, **Syntax**, and **Semantic** analysis phases o
 
 ---
 
-## Supported Syntax
+## :page_with_curl: Supported Syntax
 
 Prism supports a strict subset of the Java language.
 
@@ -47,14 +47,14 @@ boolean isActive = true;
 count = 50;
 ```
 ---
-## Architecture
+## :triangular_ruler: Architecture
 The project follows the **MVC (Model-View-Controller)** pattern:
 -**Controller** (com.prismx.controller): Orchestrates the UI flow and analysis sequence.
 -**Model** (com.prismx.model): Contains the core compiler logic (Lexer, Parser, Semantic Analyzer).
 -**View** (com.prismx.view): FXML layouts and CSS stylesheets.
 
 --- 
-## Setup & Practice
+## :gear: Setup & Practice
 1. Clone the repository.
 2. Open in your favourite Java IDE(e.g. VSCode, IntelliJ).
 3. Add JavaFX SDK to your project libraries.
