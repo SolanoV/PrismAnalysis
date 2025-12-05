@@ -1,0 +1,179 @@
+/* Color Palette */
+.root {
+    /* Dark Mode */
+    -color-bg-base: #092127;
+    -color-bg-panel: #092127;
+
+    /* Neon Accents */
+    -color-neon-cyan: #00f0ff;
+    -color-neon-red: #ff004c;
+    -color-neon-purple: #4d0bae;
+
+    /* Text Colors */
+    -color-text-main: #FFFFFF;
+    -color-text-secondary: #C9D1D9;
+    -color-bg-input: #051317;
+}
+
+/* Light Mode */
+.light-mode {
+    -color-bg-base: #FFFFFF;
+    -color-bg-panel: #FFFFFF;
+    -color-bg-input: #FAFBFC;
+
+    -color-text-main: #000000;
+    -color-text-secondary: #586069;
+
+    -color-neon-cyan: #0097a7;
+    -color-neon-red: #d50000;
+    -color-neon-purple: #6200ea;
+}
+
+/* Layouts and Backgrounds */
+
+.root {
+    -fx-background-color: -color-bg-base;
+}
+
+/* Main Title */
+.title-label {
+    -fx-text-fill: -color-neon-cyan;
+    -fx-font-size: 30pt;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 15, 0.3, 0, 0);
+}
+
+/* Panel Headers */
+.header-label {
+    -fx-text-fill: -color-neon-cyan;
+    -fx-font-weight: bold;
+    -fx-font-size: 16pt;
+}
+
+/* Editor Panel */
+
+/* Source Code */
+#sourcePanel {
+    -fx-background-color: -color-bg-panel;
+    -fx-background-radius: 10px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 15, 0.1, 0, 0);
+}
+
+/* Analysis Result */
+#analysisPanel {
+    -fx-background-color: -color-bg-panel;
+    -fx-background-radius: 10px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 15, 0.1, 0, 0);
+}
+
+#analysisPanel .header-label {
+    -fx-text-fill: -color-neon-purple;
+}
+
+/* Text Areas */
+.text-area {
+    -fx-background-color: -color-bg-input;
+    -fx-control-inner-background: -color-bg-input;
+    -fx-prompt-text-fill: derive(-color-text-secondary, -20%);
+    -fx-font-family: "Consolas", "Monospace";
+    -fx-font-size: 14pt;
+    -fx-text-fill: -color-text-main;
+
+    /* Rounded Corners for the container */
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 5px;
+}
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content {
+    -fx-background-color: -color-bg-input;
+    -fx-background-radius: 10px;
+}
+
+.text-area:focused {
+    -fx-background-color: -color-bg-input;
+    -fx-border-color: transparent;
+    -fx-background-radius: 10px;
+}
+
+/* Footer and Status */
+
+.footer-panel {
+    -fx-background-color: -color-bg-panel;
+    -fx-background-radius: 10px;
+    -fx-padding: 15px 30px;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 15, 0.1, 0, 0);
+}
+.footer-panel Circle {
+    -fx-radius: 5px;
+}
+
+.footer-panel .label {
+    -fx-font-size: 10pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-secondary;
+}
+
+/* Buttons */
+
+/* Theme Toggle (Header) */
+.theme-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+.theme-button:hover {
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 10, 0.4, 0, 0);
+}
+
+/*Base Button Styles */
+.primary-button, .action-button {
+    -fx-background-color: -color-bg-panel;
+    -fx-text-fill: -color-neon-cyan;
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5px;
+    -fx-border-color: -color-neon-cyan;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 10, 0.2, 0, 0);
+}
+
+.danger-button {
+    -fx-background-color: -color-bg-panel;
+    -fx-text-fill: -color-neon-red;
+    -fx-font-size: 11pt;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5px;
+    -fx-border-color: -color-neon-red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, -color-neon-red, 10, 0.2, 0, 0);
+}
+
+.primary-button:hover, .action-button:hover {
+    -fx-background-color: rgba(0, 240, 255, 0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, -color-neon-cyan, 20, 0.5, 0, 0);
+}
+
+.danger-button:hover {
+    -fx-background-color: rgba(255, 23, 68, 0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, -color-neon-red, 20, 0.4, 0, 0);
+}

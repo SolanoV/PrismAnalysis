@@ -3,42 +3,67 @@ package com.prismx.model;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class lexicalAction {
     private BufferedReader br;
-    HashMap<Integer, String> lineDict;
-    HashMap<Integer, String> lexicalDict;
+    private HashMap<Integer, String> lineDict;
+    private HashMap<Integer, ArrayList<String>> lexicalDict;
+    private HashMap<Integer, ArrayList<String>> tokenDict;
+    private StringBuilder content;
 
     public lexicalAction(File file) throws FileNotFoundException {
         this.br = new BufferedReader(new FileReader(file));
         this.lineDict = new HashMap<>();
-        this.lexicalDict = new HashMap<>();
+        this.lexicalDict = new LinkedHashMap<>();
+        this.tokenDict = new HashMap<>();
+        this.content = new StringBuilder();
     }
 
     public void lexicalAnalysis() throws IOException {
         cleaner();
-        for(HashMap.Entry<Integer, String> entry : lineDict.entrySet()) {
-            ArrayList<String> lexemes=lexemeSplit(entry.getValue());
+        for(Map.Entry<Integer, String> entry : lineDict.entrySet()) {
             int key=entry.getKey();
-            StringBuilder toLexicalDict=new StringBuilder();
+            ArrayList<String> lexemes=lexemeSplit(entry.getValue());
+            ArrayList<String> toTokenDict=new ArrayList<>();
+
+
             for (String lexeme : lexemes) {
                 if (!lexeme.isEmpty()) {
-                    toLexicalDict.append(tokenizer(lexeme)+" ");
-                    //System.out.print(tokenizer(lexeme)+" ");//debugging
+                    toTokenDict.add(tokenizer(lexeme));
+                    //System.out.print(tokenizer(lexeme)+" "+lexeme);//debugging
                     //System.out.print(" " + lexeme + "\n");//for debugging
                 }
             }
-            lexicalDict.put(key, toLexicalDict.toString());
-            toLexicalDict.setLength(0);
+            tokenDict.put(key, toTokenDict);
+            lexicalDict.put(key, lexemes);
+            //System.out.println();//debuggin
 
         }
 
-        for(HashMap.Entry<Integer, String> entry : lexicalDict.entrySet()) {
-            System.out.println("["+entry.getKey()+"] "+entry.getValue());
-        }//Debugging
+        System.out.println("--- LEXICAL DEBUG MODE ---");
+        for (Map.Entry<Integer, ArrayList<String>> entry : tokenDict.entrySet()) {
+            System.out.print("[" + entry.getKey() + "] ");
+            content.append("[" + entry.getKey() + "] ");
+
+            for (String token : entry.getValue()) {
+                System.out.print(token + " ");
+                content.append(token+" ");
+            }
+            System.out.println();
+            content.append("\n");
+        }
     }
 
-    public HashMap<Integer, String> getLexicalDict() {
+    public String getContent() {
+        return content.toString();
+    }
+    public HashMap<Integer, ArrayList<String>> getTokenDict() {
+        return tokenDict;
+    }
+
+    public HashMap<Integer, ArrayList<String>> getLexicalDict() {
         return lexicalDict;
     }
 

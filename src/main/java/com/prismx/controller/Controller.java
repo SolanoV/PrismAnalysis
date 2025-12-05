@@ -9,6 +9,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -16,7 +19,9 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -33,12 +38,16 @@ public class Controller implements Initializable {
     @FXML private Circle statusLexical;
     @FXML private Circle statusSyntax;
     @FXML private Circle statusSemantic;
+    @FXML private AnchorPane rootPane;
+    @FXML private ImageView imgThemeIcon;
 
+    private boolean isLightMode = false;
     private boolean loadIsSuccessful = false;
     private boolean lexicalIsSuccessful = false;
     private boolean syntaxIsSuccessful = false;
 
-    private HashMap<Integer, String> processedLexical;
+    private HashMap<Integer, ArrayList<String>> processedLexical;
+    private HashMap<Integer, ArrayList<String>> processedTokens;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,6 +55,28 @@ public class Controller implements Initializable {
         disableButtons();
         sourceCodeArea.setEditable(false);
         resultArea.setEditable(false);
+    }
+
+    @FXML
+    protected void toggleMode() {
+        isLightMode = !isLightMode;
+
+        if (isLightMode) {
+            // Switch to Light Mode
+            rootPane.getStyleClass().add("light-mode");
+
+            // Set Icon to MOON (darkmode_icon.png) indicating switch to dark
+            Image moonIcon = new Image(getClass().getResourceAsStream("/com/images/darkmode_icon.png"));
+            imgThemeIcon.setImage(moonIcon);
+
+        } else {
+            // Switch to Dark Mode
+            rootPane.getStyleClass().remove("light-mode");
+
+            // Set Icon to SUN (lightmode_icon.png) indicating switch to light
+            Image sunIcon = new Image(getClass().getResourceAsStream("/com/images/lightmode_icon.png"));
+            imgThemeIcon.setImage(sunIcon);
+        }
     }
 
     @FXML
@@ -66,7 +97,7 @@ public class Controller implements Initializable {
                 }
                 if(content.toString().isEmpty()||content.toString().isBlank()){
                     sourceCodeArea.setText("");
-                    resultArea.setText("UnexpectedEmptyStringError: The text file does not contain string(s).");
+                    resultArea.appendText("UnexpectedEmptyStringError: The text file does not contain string(s).");
                 }
                 else {
                     sourceCodeArea.setText(content.toString());
@@ -75,7 +106,7 @@ public class Controller implements Initializable {
                     statusLoaded.setFill(Color.GREEN);
                     loadIsSuccessful = true;
                     enableButtons();
-                    resultArea.setText("File \"" + selectedFile.getName() + "\" successfully loaded.");
+                    resultArea.appendText("File \"" + selectedFile.getName() + "\" successfully loaded.\n");
                 }
 
             } catch (IOException e) {
@@ -91,20 +122,44 @@ public class Controller implements Initializable {
         la.lexicalAnalysis();
         if(!la.lexicalSuccessStatus()){
             statusLoaded.setFill(Color.RED);
-            resultArea.setText(">>> ERROR: Lexical Analysis attempt failed.");
+            resultArea.appendText("\n>>> ERROR: Lexical Analysis attempt failed.\n");
         }
         else {
             lexicalIsSuccessful = true;
             processedLexical=la.getLexicalDict();
+            processedTokens=la.getTokenDict();
             enableButtons();
             statusLexical.setFill(Color.GREEN);
-            resultArea.setText(">>> Lexical Analysis attempt successful.");
+            resultArea.appendText("\n>>> Lexical Analysis attempt successful.\n");
+            resultArea.appendText(la.getContent());
         }
     }
 
     @FXML
     public void btnSyntaxAction(){
-        syntaxAction syn=new syntaxAction(processedLexical);
+        resultArea.appendText("\n>>> Starting Syntax Analysis...\n");
+
+        syntaxAction syn = new syntaxAction(processedTokens, processedLexical);
+        syn.analyzeSyntax();
+
+        HashMap<Integer, String> errors = syn.getErrors();
+
+        if (errors.isEmpty()) {
+            statusSyntax.setFill(Color.GREEN);
+            syntaxIsSuccessful = true;
+            resultArea.appendText(">>> Syntax Analysis successful. No errors found.\n");
+            enableButtons();
+        } else {
+            statusSyntax.setFill(Color.RED);
+            syntaxIsSuccessful = false;
+            resultArea.appendText(">>> Syntax Analysis Failed! Found " + errors.size() + " error(s):\n");
+
+            // Print specific errors to the text area
+            for (Map.Entry<Integer, String> entry : errors.entrySet()) {
+                resultArea.appendText("Line " + entry.getKey() + ": " + entry.getValue() + "\n");
+            }
+            disableButtons();
+        }
     }
 
     @FXML

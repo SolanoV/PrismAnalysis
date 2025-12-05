@@ -4,15 +4,16 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="790.0" prefWidth="1400.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.prismx.controller.Controller">
+<AnchorPane fx:id="rootPane" prefHeight="790.0" prefWidth="1400.0" stylesheets="@../CSS/stylesheets.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.prismx.controller.Controller">
     <children>
         <VBox spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <padding>
@@ -22,15 +23,15 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">
                     <children>
-                        <StackPane fx:id="logo" prefHeight="50.0" prefWidth="50.0">
-                            <children>
-                                <Label text="&gt;_" />
-                            </children>
-                        </StackPane>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/logo.png" />
+                            </image>
+                        </ImageView>
 
-                        <Label text="PRISM COMPILER">
+                        <Label styleClass="title-label" text="PRISM COMPILER">
                             <font>
-                                <Font name="System Bold" size="24.0" />
+                                <Font name="System Bold" size="36.0" />
                             </font>
                         </Label>
 
@@ -38,8 +39,15 @@
 
                         <HBox alignment="CENTER_RIGHT" spacing="20.0">
                             <children>
-                                <Button mnemonicParsing="false" text="History" />
-                                <Button mnemonicParsing="false" text="Dark Mode/Light Mode" />
+                                <Button fx:id="btnThemeToggle" mnemonicParsing="false" onAction="#toggleMode" styleClass="theme-button">
+                                    <graphic>
+                                        <ImageView fx:id="imgThemeIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/lightmode_icon.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
                             </children>
                         </HBox>
                     </children>
@@ -48,15 +56,11 @@
                 <HBox spacing="30.0" VBox.vgrow="ALWAYS">
                     <children>
 
-                        <VBox prefWidth="550.0" spacing="10.0" styleClass="editor-panel" HBox.hgrow="ALWAYS">
+                        <VBox fx:id="sourcePanel" prefWidth="550.0" spacing="10.0" styleClass="editor-panel" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
-                                        <Label text="&lt;/&gt; Source Code">
-                                            <font>
-                                                <Font size="16.0" />
-                                            </font>
-                                        </Label>
+                                        <Label styleClass="header-label" text=" Source Code" />
                                     </children>
                                 </HBox>
 
@@ -64,15 +68,11 @@
                             </children>
                         </VBox>
 
-                        <VBox prefWidth="550.0" spacing="10.0" styleClass="editor-panel" HBox.hgrow="ALWAYS">
+                        <VBox fx:id="analysisPanel" prefWidth="550.0" spacing="10.0" styleClass="editor-panel" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
-                                        <Label text="Analysis Result">
-                                            <font>
-                                                <Font size="16.0" />
-                                            </font>
-                                        </Label>
+                                        <Label styleClass="header-label" text=" Analysis Result" />
                                     </children>
                                 </HBox>
 
@@ -89,19 +89,19 @@
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                     <Circle fx:id="statusLoaded" fill="GREY" radius="5.0" />
-                                    <Label text="File Loaded" textFill="LIGHTGRAY" />
+                                    <Label text="File Loaded" />
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                     <Circle fx:id="statusLexical" fill="GREY" radius="5.0" />
-                                    <Label text="Lexical" textFill="LIGHTGRAY" />
+                                    <Label text="Lexical" />
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                     <Circle fx:id="statusSyntax" fill="GREY" radius="5.0" />
-                                    <Label text="Syntax" textFill="LIGHTGRAY" />
+                                    <Label text="Syntax" />
                                 </HBox>
                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                     <Circle fx:id="statusSemantic" fill="GREY" radius="5.0" />
-                                    <Label text="Semantic" textFill="LIGHTGRAY" />
+                                    <Label text="Semantic" />
                                 </HBox>
                             </children>
                             <padding>
@@ -112,13 +112,9 @@
                         <HBox alignment="CENTER" spacing="40.0">
                             <children>
                                 <Button fx:id="btnOpenFile" onAction="#btnOpenFileAction" styleClass="primary-button" text="Open File" />
-
                                 <Button fx:id="btnLexical" onAction="#btnLexicalAction" styleClass="action-button" text="Lexical" />
-
                                 <Button fx:id="btnSyntax" onAction="#btnSyntaxAction" styleClass="action-button" text="Syntax" />
-
                                 <Button fx:id="btnSemantic" onAction="#btnSemanticAction" styleClass="action-button" text="Semantic" />
-
                                 <Button fx:id="btnClear" onAction="#btnClearAction" styleClass="danger-button" text="Clear" />
                             </children>
                             <padding>
