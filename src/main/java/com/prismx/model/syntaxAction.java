@@ -9,16 +9,17 @@ public class syntaxAction {
     private HashMap<Integer, ArrayList<String>> processedTokens;
     private HashMap<Integer, ArrayList<String>> processedLexicals;
     private HashMap<Integer, String> errors;
+    private StringBuilder content;
 
     public syntaxAction(HashMap<Integer, ArrayList<String>> processedTokens, HashMap<Integer, ArrayList<String>> processedLexicals) {
         this.processedTokens = processedTokens;
         this.processedLexicals = processedLexicals;
         this.errors = new HashMap<>();
+        this.content = new StringBuilder();
     }
 
     public void analyzeSyntax() {
         errors.clear();
-
         System.out.println("\n--- SYNTAX DEBUGGING ---");
 
         // SYMBOL TABLE: Keeps track of declared variables (e.g., "x", "count")
@@ -46,6 +47,7 @@ public class syntaxAction {
                 }
 
                 System.out.println("Line " + lineNumber + ": Syntax Correct");
+                content.append("Line " + lineNumber + ": Syntax Correct\n");
 
             } catch (Exception e) {
                 // Store the error message for the Controller to display
@@ -127,4 +129,6 @@ public class syntaxAction {
     public HashMap<Integer, String> getErrors() {
         return errors;
     }
+
+    public String getContent() { return content.toString(); }
 }

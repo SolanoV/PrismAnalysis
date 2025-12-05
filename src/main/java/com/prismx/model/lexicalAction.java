@@ -3,22 +3,23 @@ package com.prismx.model;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class lexicalAction {
     private BufferedReader br;
     private HashMap<Integer, String> lineDict;
-    private HashMap<Integer, ArrayList<String>> lexicalDict;
+    private HashMap<Integer, ArrayList<String>> lexemeDict;
     private HashMap<Integer, ArrayList<String>> tokenDict;
+    private HashMap<Integer, ArrayList<String>> errors;
     private StringBuilder content;
 
     public lexicalAction(File file) throws FileNotFoundException {
         this.br = new BufferedReader(new FileReader(file));
         this.lineDict = new HashMap<>();
-        this.lexicalDict = new LinkedHashMap<>();
+        this.lexemeDict = new HashMap<>();
         this.tokenDict = new HashMap<>();
         this.content = new StringBuilder();
+        this.errors = new HashMap<>();
     }
 
     public void lexicalAnalysis() throws IOException {
@@ -37,8 +38,12 @@ public class lexicalAction {
                 }
             }
             tokenDict.put(key, toTokenDict);
-            lexicalDict.put(key, lexemes);
+            lexemeDict.put(key, lexemes);
             //System.out.println();//debuggin
+            ArrayList<String> currentLine = tokenDict.get(key);
+            if(currentLine.contains("<error>")) {
+                errors.put(key, currentLine);
+            }
 
         }
 
@@ -62,9 +67,16 @@ public class lexicalAction {
     public HashMap<Integer, ArrayList<String>> getTokenDict() {
         return tokenDict;
     }
-
     public HashMap<Integer, ArrayList<String>> getLexicalDict() {
-        return lexicalDict;
+        return lexemeDict;
+    }
+
+    public String getErrors() {
+        StringBuilder errorContent = new StringBuilder();
+        for (Map.Entry<Integer, ArrayList<String>> entry : errors.entrySet()) {
+            errorContent.append("Line "+entry.getKey()+": Lexeme Error Found\n");
+        }
+        return errorContent.toString();
     }
 
     public void cleaner() throws IOException {
@@ -78,7 +90,7 @@ public class lexicalAction {
     }
 
     public boolean lexicalSuccessStatus(){
-        if(lexicalDict.isEmpty()){
+        if(!errors.isEmpty()){
             return false;
         }
         return true;

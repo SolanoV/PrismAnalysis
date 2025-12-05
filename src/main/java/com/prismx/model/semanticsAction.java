@@ -74,7 +74,6 @@ public class semanticsAction {
         }
     }
 
-    // Logic: x = 10;
     private void analyzeAssignment(ArrayList<String> tokens, ArrayList<String> lexemes) throws Exception {
         String varName = lexemes.get(0);
         String valueLexeme = lexemes.get(2); // The value being assigned
@@ -150,4 +149,6 @@ public class semanticsAction {
     public HashMap<Integer, String> getErrors() {
         return errors;
     }
+
+
 }

@@ -121,6 +121,7 @@ public class Controller implements Initializable {
         if(!la.lexicalSuccessStatus()){
             statusLexical.setFill(Color.RED);
             resultArea.appendText("\n>>> ERROR: Lexical Analysis attempt failed.\n");
+            resultArea.appendText(la.getErrors());
             lexicalIsSuccessful = false;
             btnSyntax.setDisable(true);
             btnSemantic.setDisable(true);
@@ -140,7 +141,6 @@ public class Controller implements Initializable {
     public void btnSyntaxAction(){
         btnSyntax.setDisable(true);
 
-        resultArea.appendText("\n>>> Starting Syntax Analysis...\n");
         syntaxAction syn = new syntaxAction(processedTokens, processedLexical);
         syn.analyzeSyntax();
         HashMap<Integer, String> errors = syn.getErrors();
@@ -148,13 +148,14 @@ public class Controller implements Initializable {
         if(errors.isEmpty()){
             statusSyntax.setFill(Color.GREEN);
             syntaxIsSuccessful = true;
-            resultArea.appendText(">>> Syntax Analysis successful. No errors found.\n");
+            resultArea.appendText("\n>>> Syntax Analysis successful. No errors found.\n");
+            resultArea.appendText(syn.getContent());
             btnSemantic.setDisable(false);
         }
         else{
             statusSyntax.setFill(Color.RED);
             syntaxIsSuccessful = false;
-            resultArea.appendText(">>> Syntax Analysis Failed! Found " + errors.size() + " error(s):\n");
+            resultArea.appendText("\n>>> Syntax Analysis Failed! Found " + errors.size() + " error(s):\n");
 
             for (Map.Entry<Integer, String> entry : errors.entrySet()) {
                 resultArea.appendText("Line " + entry.getKey() + ": " + entry.getValue() + "\n");
@@ -175,10 +176,10 @@ public class Controller implements Initializable {
 
         if (hasErrors) {
             statusSemantic.setFill(Color.RED);
-            resultArea.appendText(">>> Semantic Analysis Failed.\n");
+            resultArea.appendText("\n>>> Semantic Analysis Failed.\n");
         } else {
             statusSemantic.setFill(Color.GREEN);
-            resultArea.appendText(">>> Semantic Analysis Passed. Code is logically sound.\n");
+            resultArea.appendText("\n>>> Semantic Analysis Passed. Code is logically correct.\n");
         }
 
         for (Map.Entry<Integer, ArrayList<String>> entry : processedTokens.entrySet()) {
