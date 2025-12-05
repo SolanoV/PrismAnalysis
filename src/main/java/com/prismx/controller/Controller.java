@@ -120,7 +120,7 @@ public class Controller implements Initializable {
 
         if(!la.lexicalSuccessStatus()){
             statusLexical.setFill(Color.RED);
-            resultArea.appendText("\n>>> ERROR: Lexical Analysis attempt failed.\n");
+            resultArea.appendText("\n>>> ERROR: Lexical Analysis attempt failed. Found invalid token(s)\n");
             resultArea.appendText(la.getErrors());
             lexicalIsSuccessful = false;
             btnSyntax.setDisable(true);

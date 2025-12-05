@@ -74,7 +74,7 @@ public class lexicalAction {
     public String getErrors() {
         StringBuilder errorContent = new StringBuilder();
         for (Map.Entry<Integer, ArrayList<String>> entry : errors.entrySet()) {
-            errorContent.append("Line "+entry.getKey()+": Lexeme Error Found\n");
+            errorContent.append("Line "+entry.getKey()+": "+entry.getValue()+"\n");
         }
         return errorContent.toString();
     }
