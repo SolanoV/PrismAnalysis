@@ -17,10 +17,9 @@ public class syntaxAction {
     }
 
     public void analyzeSyntax() {
-        // Clear errors before starting a new analysis
         errors.clear();
 
-        System.out.println("\n--- STARTING SYNTAX ANALYSIS ---");
+        System.out.println("\n--- SYNTAX DEBUGGING ---");
 
         // SYMBOL TABLE: Keeps track of declared variables (e.g., "x", "count")
         // We reset this every time we analyze the code to ensure a clean scope.
@@ -30,13 +29,8 @@ public class syntaxAction {
             int lineNumber = entry.getKey();
             ArrayList<String> tokens = entry.getValue();
             ArrayList<String> lexemes = processedLexicals.get(lineNumber);
-
-            // Skip empty lines
-            if (tokens.isEmpty()) continue;
-
             try {
                 String firstToken = tokens.get(0);
-
                 if (firstToken.equals("<data_type>")) {
                     // Case 1: Declaration (e.g., "int x;" or "int x = 5;")
                     // Pass the symbol table to REGISTER the new variable
@@ -51,13 +45,13 @@ public class syntaxAction {
                     throw new Exception("Invalid Statement Start. Expected Data Type or Identifier, found '" + lexemes.get(0) + "'");
                 }
 
-                System.out.println("Line " + lineNumber + ": Syntax Correct ✅");
+                System.out.println("Line " + lineNumber + ": Syntax Correct");
 
             } catch (Exception e) {
                 // Store the error message for the Controller to display
                 String errorMsg = e.getMessage();
                 errors.put(lineNumber, errorMsg);
-                System.err.println("Line " + lineNumber + " Error: " + errorMsg + " ❌");
+                System.err.println("Line " + lineNumber + " Error: " + errorMsg);
             }
         }
     }

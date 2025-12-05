@@ -62,18 +62,12 @@ public class Controller implements Initializable {
         isLightMode = !isLightMode;
 
         if (isLightMode) {
-            // Switch to Light Mode
             rootPane.getStyleClass().add("light-mode");
-
-            // Set Icon to MOON (darkmode_icon.png) indicating switch to dark
             Image moonIcon = new Image(getClass().getResourceAsStream("/com/images/darkmode_icon.png"));
             imgThemeIcon.setImage(moonIcon);
 
         } else {
-            // Switch to Dark Mode
             rootPane.getStyleClass().remove("light-mode");
-
-            // Set Icon to SUN (lightmode_icon.png) indicating switch to light
             Image sunIcon = new Image(getClass().getResourceAsStream("/com/images/lightmode_icon.png"));
             imgThemeIcon.setImage(sunIcon);
         }
@@ -138,18 +132,16 @@ public class Controller implements Initializable {
     @FXML
     public void btnSyntaxAction(){
         resultArea.appendText("\n>>> Starting Syntax Analysis...\n");
-
         syntaxAction syn = new syntaxAction(processedTokens, processedLexical);
         syn.analyzeSyntax();
-
         HashMap<Integer, String> errors = syn.getErrors();
 
-        if (errors.isEmpty()) {
+        if(errors.isEmpty()){
             statusSyntax.setFill(Color.GREEN);
             syntaxIsSuccessful = true;
             resultArea.appendText(">>> Syntax Analysis successful. No errors found.\n");
-            enableButtons();
-        } else {
+            enableButtons();}
+        else{
             statusSyntax.setFill(Color.RED);
             syntaxIsSuccessful = false;
             resultArea.appendText(">>> Syntax Analysis Failed! Found " + errors.size() + " error(s):\n");
@@ -164,7 +156,29 @@ public class Controller implements Initializable {
 
     @FXML
     public void btnSemanticAction(){
+        semanticsAction sem = new semanticsAction(processedTokens, processedLexical);
+        sem.analyzeSemantics();
+        HashMap<Integer, String> errors = sem.getErrors();
+        boolean hasErrors = false;
+        if (hasErrors) {
+            statusSemantic.setFill(Color.RED);
+            resultArea.appendText(">>> Semantic Analysis Failed.\n");
+        } else {
+            statusSemantic.setFill(Color.GREEN);
+            resultArea.appendText(">>> Semantic Analysis Passed. Code is logically sound.\n");
+        }
 
+        for (Map.Entry<Integer, ArrayList<String>> entry : processedTokens.entrySet()) {
+            int lineNumber = entry.getKey();
+            if (entry.getValue().isEmpty()) continue;
+
+            if (errors.containsKey(lineNumber)) {
+                hasErrors = true;
+                resultArea.appendText("Line " + lineNumber + " Error: " + errors.get(lineNumber) + " \n");
+            } else {
+                resultArea.appendText("Line " + lineNumber + ": Semantics Correct \n");
+            }
+        }
     }
 
     @FXML
