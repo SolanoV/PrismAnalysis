@@ -9,7 +9,6 @@ public class semanticsAction {
     private HashMap<Integer, ArrayList<String>> processedLexicals;
     private HashMap<Integer, String> errors;
 
-    // Symbol Table: Stores Variable Name -> Data Type (e.g., "count" -> "int")
     private HashMap<String, String> symbolTable;
 
     public semanticsAction(HashMap<Integer, ArrayList<String>> processedTokens, HashMap<Integer, ArrayList<String>> processedLexicals) {
@@ -54,20 +53,16 @@ public class semanticsAction {
         }
     }
 
-    // Logic: int x = 5;
     private void analyzeDeclaration(ArrayList<String> tokens, ArrayList<String> lexemes) throws Exception {
-        String dataType = lexemes.get(0); // e.g., "int", "byte", "long"
-        String varName = lexemes.get(1);  // e.g., "x"
+        String dataType = lexemes.get(0);
+        String varName = lexemes.get(1);
 
-        // 1. Check for Re-declaration
         if (symbolTable.containsKey(varName)) {
             throw new Exception("Variable '" + varName + "' is already declared.");
         }
 
-        // 2. Register Variable
         symbolTable.put(varName, dataType);
 
-        // 3. Check Initialization (if exists)
         if (tokens.size() > 2 && tokens.get(2).equals("<assignment_operator>")) {
             String valueLexeme = lexemes.get(3); // The actual value (e.g., "5", "100L", "3.14f")
             checkTypeCompatibility(dataType, valueLexeme);
@@ -76,30 +71,23 @@ public class semanticsAction {
 
     private void analyzeAssignment(ArrayList<String> tokens, ArrayList<String> lexemes) throws Exception {
         String varName = lexemes.get(0);
-        String valueLexeme = lexemes.get(2); // The value being assigned
+        String valueLexeme = lexemes.get(2);
 
-        // 1. Check if declared
         if (!symbolTable.containsKey(varName)) {
             throw new Exception("Variable '" + varName + "' is not declared.");
         }
 
-        // 2. Retrieve the variable's expected type
+
         String expectedType = symbolTable.get(varName);
 
-        // 3. Check compatibility
         checkTypeCompatibility(expectedType, valueLexeme);
     }
 
-    // Logic: Does "100L" fit into "long"? Does "128" fit into "byte"?
     private void checkTypeCompatibility(String declaredType, String valueLexeme) throws Exception {
         String inferredType = inferType(valueLexeme);
 
-        // 1. Exact Match (e.g., int -> int)
         if (declaredType.equals(inferredType)) return;
 
-        // 2. Widening / Special Handling / Suffix checks
-
-        // byte -> int literal (Check Range)
         if (declaredType.equals("byte") && inferredType.equals("int")) {
             try {
                 int val = Integer.parseInt(valueLexeme);
@@ -108,7 +96,6 @@ public class semanticsAction {
             } catch (NumberFormatException e) { /* Ignore */ }
         }
 
-        // short -> int literal (Check Range)
         if (declaredType.equals("short") && inferredType.equals("int")) {
             try {
                 int val = Integer.parseInt(valueLexeme);
@@ -117,26 +104,21 @@ public class semanticsAction {
             } catch (NumberFormatException e) { /* Ignore */ }
         }
 
-        // long -> int (Widening)
         if (declaredType.equals("long") && inferredType.equals("int")) return;
 
-        // float -> int or long (Widening)
+
         if (declaredType.equals("float") && (inferredType.equals("int") || inferredType.equals("long"))) return;
 
-        // double -> int, long, or float (Widening)
         if (declaredType.equals("double") && (inferredType.equals("int") || inferredType.equals("long") || inferredType.equals("float"))) return;
 
-        // If none of the above passed, it's a mismatch
         throw new Exception("Type Mismatch: Cannot assign " + inferredType + " (" + valueLexeme + ") to " + declaredType + " variable.");
     }
 
-    // Helper: Guess the type based on the string format
     private String inferType(String value) {
         if (value.matches("\".*\"")) return "String";
         if (value.matches("'[^']'")) return "char";
         if (value.equals("true") || value.equals("false")) return "boolean";
 
-        // Numeric Logic
         if (value.matches("-?\\d+[lL]")) return "long"; // Ends in L or l
         if (value.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?[fF]")) return "float"; // Ends in f or F
         if (value.matches("[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?[dD]")) return "double"; // Ends in d or D
